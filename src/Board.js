@@ -61,30 +61,12 @@
       );
     },
 
-    // CHESS BOARD
-    /** N = 4
-     * [[1,0,0,0], [0,0,0,0],[0,0,0,0], [0,0,0,0]]
-     *
-     * makeEmptyMatrix may be the intial board
-     *
-     */
-
-    /**
-     * Main objective:
-     * Allow a user to create a chess board
-     * The chess board should contain values
-     *    rows and coloums
-     * Create a bunch of trees
-     * Then check trees
-     *
-     */
     /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
-    / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ \(_)
+    / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
     \__ \ || (_| | |  | |_  | | | |  __/ | |  __/_
-    |___/\__\__,_|_|   \__| |_| |_|\___|_|  \___|(_)
-
+    |___/\__\__,_|_|   \__| |_| |_|\___|_|  \___(_)
  */
     /*=========================================================================
     =                 TODO: fill in these Helper Functions                    =
@@ -94,69 +76,20 @@
     // --------------------------------------------------------------
     //
     // test if a specific row on this board contains a conflict
-
-    // DOM selection for the queen: td.square.positive
-    // THIS FUNCTION IS RAN ON CLICK ALREADY  x NxN
-
-    // CHESS BOARD
-    /** N = 4
-     * [[1,0,0,0], [0,0,0,0],[0,0,0,0], [0,0,0,0]]
-     */
-    /**
-     * runs on Board
-     * itterates through parent array
-     * then itterates through each child array
-     *
-     * define a conflict
-     *
-     *
-     * rook1 = {
-     *    var colm: parent[0]
-     *    let row: parent[0][0]
-     * }
-     * if( check === 1 )
-     *
-     */
-
-    /**
-     * this === child === board that is created in the html
-     * this.attributes === {object} keys ===
-     *                      object === 0: [0,0,0,0] . . .
-     *                                 1: [0,0,0,0]
-     *                                 2: [0,0,0,0]
-     * v
-     */
     hasRowConflictAt: function(rowIndex) {
-      //console.log(n);
-
-      var keys = Object.keys(this.attributes);
-      var count = 0;
-      for ( var i = 0; i < this.attributes[rowIndex].length; i++ ) {
-        var curEle = this.attributes[rowIndex][i];
-        if ( curEle === 1 ) {
-          count++;
-        }
-        if ( count > 1 ) {
-          return true;
-        }
-      }
-      return false;
+      var row = this.get(rowIndex);
+      var count = row.reduce((accumulator, currentValue) => {
+        return accumulator += currentValue;
+      }, 0);
+      return count > 1;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
+      var size = this.get('n');
 
-
-      var keys = Object.keys(this.attributes);
-      for ( let j = 0; j < keys.length - 1; j++ ) {
-        var count = 0;
-        var row = this.attributes[j];
-        for ( var k = 0; k < row.length; k++ ) {
-          if ( row[k] === 1 ) {
-            count++;
-          }
-        }
-        if ( count > 1 ) {
+      for (var i = 0; i < size; i++) {
+        if (this.hasRowConflictAt(i)) {
           return true;
         }
       }
@@ -170,37 +103,11 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-
-      var count = 0;
-
-      var keys = Object.keys(this.attributes); // itterates over different arrays [0, 1, 2, 3, n]
-      for ( var i = 0; i < keys.length - 1; i++ ) {
-        var row = this.attributes[keys[i]];
-        if ( row[colIndex] === 1 ) {
-          count++;
-        }
-      }
-      if ( count > 1 ) {
-        return true;
-      }
       return false; // fixme
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      var checkers = {};
-      for ( var key in this.attributes ) {
-        var row = this.attributes[key]; // [0,0,0,0]
-        for ( var j = 0; j < row.length; j++ ) {
-          if ( row[j] === 1 ) {
-            if ( checkers[j] ) {
-              return true;
-            } else {
-              checkers[j] = 1;
-            }
-          }
-        }
-      }
       return false; // fixme
     },
 
@@ -210,65 +117,13 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(look) {
-      let count = 0;
-      for ( let r = 0; r < this.attributes.n; r++ ) {
-        for ( let c = 0; c < this.attributes[r].length; c++ ) {
-          if ( this.attributes[r][c] === 1 ) {
-            if ( c - r === look ) {
-              count++;
-            }
-          }
-        }
-      }
-      if (count > 1) {
-        return true;
-      }
-      /** col - row
-      * this === child === board that is created in the html
-      * this.attributes === {object} keys ===
-      *                      object === 0: [0, 1, 2, 3] // 0
-      *                                 1: [-1, 0, 1, 2]
-      *                                 2: [-2, -1, 0, 1]
-      *                                 3: [-3, -2, -1, 0] // 3
-      *
-      *                      object === 0: [0,1,0,0] // 1
-      *                                 1: [0,0,0,0] //
-      *                                 2: [0,0,0,1] // 3
-      *                                 3: [0,0,0,0]
-      *
-      *                      object === 0: [0,0,0,0] . . .
-      *                                 1: [1,0,0,0]
-      *                                 2: [0,1,0,0]
-      *                                 3: [0,0,1,0]
-      */
-
+    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
       return false; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-
-      let checkers = {};
-      for ( let r = 0; r < this.attributes.n; r++ ) {
-        for ( let c = 0; c < this.attributes[r].length; c++ ) {
-          if ( this.attributes[r][c] === 1 ) {
-            if ( checkers[c - r] === undefined ) {
-              checkers[c - r] = 1;
-            } else {
-              checkers[c - r]++;
-            }
-          }
-        }
-      }
-
-      for ( let key in checkers ) {
-        if ( checkers[key] > 1 ) {
-          return true;
-        }
-      }
-
-      return false;
+      return false; // fixme
     },
 
 
@@ -277,47 +132,12 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(look) {
-
-      let count = 0;
-      for ( let r = 0; r < this.attributes.n; r++ ) {
-        for ( let c = 0; c < this.attributes[r].length; c++ ) {
-          if ( this.attributes[r][c] === 1 ) {
-            if ( c + r === look ) {
-              count++;
-            }
-          }
-        }
-      }
-      if (count > 1) {
-        return true;
-      }
-
+    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
       return false; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-
-      let checkers = {};
-      for ( let r = 0; r < this.attributes.n; r++ ) {
-        for ( let c = 0; c < this.attributes[r].length; c++ ) {
-          if ( this.attributes[r][c] === 1 ) {
-            if ( checkers[c + r] === undefined ) {
-              checkers[c + r] = 1;
-            } else {
-              checkers[c + r]++;
-            }
-          }
-        }
-      }
-
-      for ( let key in checkers ) {
-        if ( checkers[key] > 1 ) {
-          return true;
-        }
-      }
-
       return false; // fixme
     }
 
