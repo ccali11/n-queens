@@ -124,27 +124,63 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var size = this.get('n');
+      var count = 0;
+      var rowIndx = 0;
+      var colIndx = majorDiagonalColumnIndexAtFirstRow;
+
+      for ( ; rowIndx < size && colIndx < size; rowIndx++, colIndx++) {
+        if (colIndx >= 0) {
+          var row = this.get(rowIndx);
+          count += row[colIndx];
+        }
+      }
+
+      return count > 1;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var size = this.get('n');
+      for ( var i = 1 - size; i < size; i++ ) {
+        if (this.hasMajorDiagonalConflictAt(i)) {
+          return true;
+        }
+      }
+      return false;
     },
-
-
 
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var size = this.get('n');
+      var count = 0;
+      var rowIndx = 0;
+      var colIndx = minorDiagonalColumnIndexAtFirstRow;
+
+      for ( ; rowIndx < size && colIndx >= 0; rowIndx++, colIndx-- ) {
+        if ( colIndx < size ) {
+          var row = this.get(rowIndx);
+          count += row[colIndx];
+        }
+      }
+
+      return count > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var size = this.get('n');
+
+      for ( var i = (size * 2) - 1; i >= 0; i-- ) {
+        if ( this.hasMinorDiagonalConflictAt(i) ) {
+          return true;
+        }
+      }
+
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
